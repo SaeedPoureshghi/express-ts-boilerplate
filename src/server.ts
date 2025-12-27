@@ -3,13 +3,17 @@ import { config } from "./config/dotenv";
 import expressJSDocSwagger from "express-jsdoc-swagger";
 import { swaggerOptions } from "./config/swagger";
 import cors from "cors";
-import api from "@/routes/PublicRoutes";
+import cookieParser from "cookie-parser";
+import api from "@/routes/index";
 
 // create express app
 const app = express();
 
 // use express json
 app.use(express.json());
+
+// use cookie parser
+app.use(cookieParser());
 
 // use cors for better security
 app.use(
