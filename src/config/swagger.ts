@@ -1,7 +1,7 @@
 import path from "path";
 export const swaggerOptions = {
   info: {
-    version: "1.0.0",
+    version: "1.1.0",
     title: "Express API",
     description: "Express API boilerplate",
     contact: {
@@ -18,7 +18,7 @@ export const swaggerOptions = {
     CookieAuth: {
       type: "apiKey",
       scheme: "cookie",
-      name: "refreshToken",
+      name: "token",
     },
   },
   servers: [
