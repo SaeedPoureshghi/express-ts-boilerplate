@@ -48,6 +48,13 @@ class ProtectedController {
       });
     }
   };
+
+  public rateLimited = async (req: Request, res: Response) => {
+    res.json({
+      success: true,
+      message: " You are inside rates.",
+    });
+  };
 }
 
 export default new ProtectedController();

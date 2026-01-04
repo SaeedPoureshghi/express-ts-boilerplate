@@ -1,6 +1,7 @@
 import { authMiddleware } from "@/middlewares/Auth";
 import { Router } from "express";
 import ProtectedController from "@/controllers/ProtectedController";
+import rateLimitter from "@/middlewares/RateLimitter";
 
 const router = Router();
 
@@ -20,5 +21,13 @@ router.get("/", authMiddleware, ProtectedController.successResponse);
  * @returns {SuccessResponse} 200 - JWE token created and saved to cookie
  */
 router.post("/create-token", ProtectedController.createJWE);
+
+/**
+ * GET /protected/rate-limited
+ * @tags Protected
+ * @summary Rate Limited Route
+ * @returns {SuccessResponse} 200 - A successful response
+ */
+router.get("/rate-limited", rateLimitter, ProtectedController.rateLimited);
 
 export default router;

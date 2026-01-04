@@ -9,6 +9,7 @@ A modern, production-ready Express.js boilerplate built with TypeScript, featuri
 - **JWE (JSON Web Encryption) Token System**: Secure token-based authentication using JWE encryption
 - **Cookie-based Authentication**: HTTP-only cookies for secure token storage
 - **Authentication Middleware**: Protect routes with JWE token validation
+- **Rate Limiting**: IP-based rate limiting to prevent abuse and protect against DDoS attacks
 - **CORS Configuration**: Configurable CORS with credentials support
 - **Security Best Practices**: Secure cookies, SameSite protection, and environment-based security flags
 
@@ -157,6 +158,34 @@ Protected route that requires authentication via cookie.
 }
 ```
 
+#### `GET /api/v1/protected/rate-limited`
+
+Rate-limited route that demonstrates rate limiting functionality. This endpoint is limited to 5 requests per minute per IP address.
+
+**Rate Limit:**
+
+- **Window**: 1 minute
+- **Max Requests**: 5 per IP address
+- **Headers**: Rate limit information is included in response headers
+
+**Response (Success):**
+
+```json
+{
+  "success": true,
+  "message": "You are inside rates."
+}
+```
+
+**Response (Rate Limit Exceeded - 429):**
+
+```json
+{
+  "success": false,
+  "message": "Too many requests, please try again later."
+}
+```
+
 ## API Documentation
 
 Once the server is running, access the interactive Swagger documentation at:
@@ -186,7 +215,8 @@ express-ts-boilerplate/
 │   │   ├── PublicController.ts
 │   │   └── ProtectedController.ts
 │   ├── middlewares/     # Express middlewares
-│   │   └── Auth.ts      # JWE authentication middleware
+│   │   ├── Auth.ts      # JWE authentication middleware
+│   │   └── RateLimitter.ts  # Rate limiting middleware
 │   ├── routes/          # Route definitions
 │   │   ├── index.ts     # Main router
 │   │   ├── PublicRoutes.ts
@@ -263,6 +293,33 @@ The project uses path aliases for cleaner imports:
 - `npm run build` - Build for production
 - `npm start` - Start production server
 
+## Rate Limiting
+
+The boilerplate includes a rate limiting middleware to protect your API from abuse and DDoS attacks. The rate limiter is configured with the following defaults:
+
+- **Window**: 1 minute
+- **Max Requests**: 5 requests per IP address per window
+- **Response Headers**: Rate limit information is automatically included in response headers
+
+### Usage
+
+Apply the rate limiter middleware to any route:
+
+```typescript
+import rateLimitter from "@/middlewares/RateLimitter";
+
+router.get("/your-route", rateLimitter, yourController);
+```
+
+### Customization
+
+You can customize the rate limiter by modifying `src/middlewares/RateLimitter.ts`:
+
+- Adjust `windowMs` to change the time window
+- Modify `max` to change the maximum number of requests
+- Customize the error message
+- Configure additional options as needed
+
 ## Security Considerations
 
 1. **Never commit `.env` files** - Add `.env` to `.gitignore`
@@ -270,6 +327,7 @@ The project uses path aliases for cleaner imports:
 3. **HTTPS in production** - Always use HTTPS in production environments
 4. **Rotate secrets** - Regularly rotate JWE secrets
 5. **Monitor token expiration** - Configure appropriate expiration times
+6. **Configure rate limits** - Adjust rate limiting thresholds based on your application's needs
 
 ## License
 
