@@ -63,13 +63,17 @@ PORT=3000
 NODE_ENV=development
 JWE_SECRET=your-secret-key-here-minimum-32-characters
 JWE_EXPIRATION_TIME=2h
+SWAGGER_USERNAME=admin
+SWAGGER_PASSWORD=admin
 ```
 
-**Important**: The `JWE_SECRET` should be:
+**Important**:
 
-- At least 32 characters long, OR
-- A base64-encoded 32-byte value
-- Kept secure and never committed to version control
+- The `JWE_SECRET` should be:
+  - At least 32 characters long, OR
+  - A base64-encoded 32-byte value
+  - Kept secure and never committed to version control
+- The `SWAGGER_USERNAME` and `SWAGGER_PASSWORD` are used for Basic Authentication to protect the Swagger documentation. Change these from the default values in production.
 
 ### Running the Application
 
@@ -160,6 +164,8 @@ Once the server is running, access the interactive Swagger documentation at:
 ```
 http://localhost:3000/api-docs
 ```
+
+**Note**: The Swagger documentation is protected with Basic Authentication. You'll need to provide the credentials configured in your `.env` file (`SWAGGER_USERNAME` and `SWAGGER_PASSWORD`) when accessing the documentation.
 
 The documentation includes:
 

@@ -5,6 +5,7 @@ import { swaggerOptions } from "./config/swagger";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import api from "@/routes/index";
+import { swaggerBasicAuth } from "@/middlewares/SwaggerAuth";
 
 // create express app
 const app = express();
@@ -25,8 +26,14 @@ app.use(
   })
 );
 
-// use swagger for api documentation
-expressJSDocSwagger(app)(swaggerOptions);
+if (config.docs) {
+  // protect swagger docs route with basic authentication
+  app.use("/api-docs", swaggerBasicAuth);
+  app.use("/api-docs/*", swaggerBasicAuth);
+
+  // use swagger for api documentation
+  expressJSDocSwagger(app)(swaggerOptions);
+}
 
 // use api routes
 app.use("/api/v1", api);
@@ -42,5 +49,7 @@ app.use("*", (req, res) => {
 // listen on port
 app.listen(config.port, () => {
   console.log(`Server is running on port ${config.port}`);
-  console.log(`API Docs: http://localhost:${config.port}/api-docs`);
+  if (config.docs) {
+    console.log(`API Docs: http://localhost:${config.port}/api-docs`);
+  }
 });
